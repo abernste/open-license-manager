@@ -49,6 +49,12 @@ make install
 
 ## on Windows (with MSVC 2015)
 ```
+Boost:
+Download latest boost sources from https://www.boost.org/
+Run: bootstrap.bat
+Run: b2 runtime-link=static
+Set boost path in CMakeLists.txt BOOST_ROOT
+
 cmake .. -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=../install
 cmake --build . --target install --config Release
 ```
