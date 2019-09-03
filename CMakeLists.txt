@@ -41,6 +41,23 @@ if(MSVC)
 	endif()
 	SET(CMAKE_FIND_LIBRARY_SUFFIXES .lib ) #${CMAKE_FIND_LIBRARY_SUFFIXES}
 	add_definitions("/D_CRT_SECURE_NO_WARNINGS")
+
+	set(CompilerFlags
+        	CMAKE_CXX_FLAGS
+	        CMAKE_CXX_FLAGS_DEBUG
+        	CMAKE_CXX_FLAGS_RELEASE
+	        CMAKE_CXX_FLAGS_MINSIZEREL
+        	CMAKE_CXX_FLAGS_RELWITHDEBINFO
+	        CMAKE_C_FLAGS
+        	CMAKE_C_FLAGS_DEBUG
+	        CMAKE_C_FLAGS_RELEASE
+        	CMAKE_C_FLAGS_MINSIZEREL
+	        CMAKE_C_FLAGS_RELWITHDEBINFO
+        	)
+	foreach(CompilerFlag ${CompilerFlags})
+    	string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+	    set(${CompilerFlag} "${${CompilerFlag}}" CACHE STRING "msvc compiler flags" FORCE)
+	endforeach()
 else(MSVC)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pipe -fmessage-length=0 -std=c++11 -Wuninitialized -fPIC") #-Wall
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pipe -fmessage-length=0 -Wall -Wuninitialized -fPIC") 
@@ -60,13 +77,13 @@ else(MSVC)
 endif(MSVC)
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS $<$<CONFIG:Debug>:_DEBUG>)
 
-
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   SET(HAVE_64BIT_SIZE_T 1)
 else(CMAKE_SIZEOF_VOID_P EQUAL 8)
   SET(HAVE_64BIT_SIZE_T 0)
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
+SET (BOOST_ROOT "C:/local/boost_1_71_0_static" CACHE FILEPATH "Path for boost")
 set( Boost_USE_STATIC_LIBS ON )
 find_package(Boost REQUIRED COMPONENTS date_time unit_test_framework program_options system filesystem)
 #set below in case of dynamic linking in debug.
